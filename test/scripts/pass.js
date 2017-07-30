@@ -1,0 +1,10 @@
+process.stdout.write('a')
+process.stdout.write('b')
+process.stderr.write('1')
+process.stderr.write('2')
+setTimeout(() => {
+  process.stdout.write('c')
+  process.stdout.write('d')
+  process.stderr.write('3')
+  process.stderr.write('4')
+}, 1000)
