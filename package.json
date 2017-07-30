@@ -1,18 +1,29 @@
 {
   "name": "jobbit",
   "version": "0.0.0",
-  "description": "Node job runner",
+  "description": "NodeJS job runner / chron alternative",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha -t 1000000"
+  "directories": {
+    "test": "test"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "bluebird": "^3.5.0"
   },
   "devDependencies": {
     "chai": "^4.1.0",
     "chai-as-promised": "^7.1.1"
-  }
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aakilfernandes/jobbit.git"
+  },
+  "author": "Aakil Fernandes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aakilfernandes/jobbit/issues"
+  },
+  "homepage": "https://github.com/aakilfernandes/jobbit#readme"
 }
