@@ -1,8 +1,8 @@
 const cp = require('child_process')
 const Promise = require('bluebird')
 
-function Jobbit(path, timeout) {
-  this.path = path
+function Jobbit(command, timeout) {
+  this.command = command
   this.isRunning = true
 
   const start = new Date()
@@ -13,12 +13,9 @@ function Jobbit(path, timeout) {
     let stderr = ''
     let isTimedOut = false
 
-    this.child = cp.exec(path, (error) => {
+    this.child = cp.exec(command, (error) => {
       this.isRunning = false
-      if (error && !isTimedOut) {
-        return reject(error)
-      }
-      const completion = new Completion(start, stdout, stderr, isTimedOut)
+      const completion = new Completion(error, start, stdout, stderr, isTimedOut)
       resolve(completion)
     })
 
@@ -42,10 +39,11 @@ function Jobbit(path, timeout) {
 }
 
 Jobbit.prototype.run = function run() {
-  return new Job(this.path)
+  return new Job(this.command)
 }
 
-function Completion(start, stdout, stderr, isTimedOut) {
+function Completion(error, start, stdout, stderr, isTimedOut) {
+  this.error = error
   this.start = start
   this.end = new Date()
   this.time = this.end - this.start

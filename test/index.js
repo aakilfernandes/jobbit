@@ -10,7 +10,10 @@ describe('Jobbit', () => {
     const jobbit = new Jobbit('node ./test/scripts/pass.js')
     return jobbit.promise.then((completion) => {
       completion.should.be.instanceOf(Object)
-      completion.should.have.keys(['start', 'end', 'time', 'stderr', 'stdout', 'isTimedOut'])
+      completion.should.have.keys(['error', 'start', 'end', 'time', 'stderr', 'stdout', 'isTimedOut'])
+      ;(completion.error === null).should.equal(true)
+      completion.start.should.be.instanceOf(Date)
+      completion.end.should.be.instanceOf(Date)
       completion.time.should.be.a('number')
       completion.time.should.be.within(1000, 1100)
       completion.stderr.should.be.a('string')
@@ -25,7 +28,10 @@ describe('Jobbit', () => {
     const jobbit = new Jobbit('node ./test/scripts/pass.js', 500)
     return jobbit.promise.then((completion) => {
       completion.should.be.instanceOf(Object)
-      completion.should.have.keys(['start', 'end', 'time', 'stderr', 'stdout', 'isTimedOut'])
+      completion.should.have.keys(['error', 'start', 'end', 'time', 'stderr', 'stdout', 'isTimedOut'])
+      completion.error.should.be.instanceOf(Error)
+      completion.start.should.be.instanceOf(Date)
+      completion.end.should.be.instanceOf(Date)
       completion.time.should.be.a('number')
       completion.time.should.be.within(500, 600)
       completion.stderr.should.be.a('string')
@@ -36,8 +42,23 @@ describe('Jobbit', () => {
       completion.isTimedOut.should.equal(true)
     })
   })
-  it('should reject for missing script', () => {
+  it('should resolve completion with throw-error script', () => {
+    const jobbit = new Jobbit('node ./test/scripts/throw-error.js')
+    return jobbit.promise.then((completion) => {
+      completion.error.should.be.instanceOf(Error)
+      completion.should.be.instanceOf(Object)
+      completion.should.have.keys(['error', 'start', 'end', 'time', 'stderr', 'stdout', 'isTimedOut'])
+      completion.start.should.be.instanceOf(Date)
+      completion.end.should.be.instanceOf(Date)
+      completion.time.should.be.a('number')
+      completion.stderr.should.be.a('string')
+      completion.stdout.should.be.a('string')
+      completion.isTimedOut.should.be.a('boolean')
+      completion.isTimedOut.should.equal(false)
+    })
+  })
+  it('should resolve for missing script', () => {
     const jobbit = new Jobbit('node ./test/scripts/missing.js')
-    return jobbit.promise.should.be.rejectedWith(Error)
+    return jobbit.promise
   })
 })
